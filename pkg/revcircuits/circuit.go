@@ -2,6 +2,7 @@ package revcircuits
 
 import (
 	"fmt"
+	"math/rand/v2"
 	"slices"
 )
 
@@ -12,6 +13,7 @@ type Gate interface {
 }
 
 type RevCircuit interface {
+	ID() int
 	Lines() int
 	Gates() []Gate
 	PlaceGates(gates ...Gate) error
@@ -22,6 +24,7 @@ type RevCircuit interface {
 }
 
 type revCircuit struct {
+	id    int
 	lines int
 	gates []Gate
 }
@@ -30,7 +33,16 @@ func NewRevCircuit(lines int, gates ...Gate) (RevCircuit, error) {
 	if lines < 1 {
 		return nil, fmt.Errorf("a circuit must have, at least, one line")
 	}
-	return &revCircuit{lines: lines, gates: gates}, nil
+	id := rand.Int()
+	return &revCircuit{
+		id:    id,
+		lines: lines,
+		gates: gates,
+	}, nil
+}
+
+func (rc *revCircuit) ID() int {
+	return rc.id
 }
 
 func (rc *revCircuit) Lines() int {
